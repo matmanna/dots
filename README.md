@@ -46,4 +46,5 @@ Focused on compatibility with the neovim theme, terminal emulation features a ðŸ
   - [ ] also auto-cd alternative workspace panes
 - [ ] demo video
 - [ ] inspect TS types better
+- [ ] python
 
