@@ -32,6 +32,74 @@ end
 
 -- config.enable_tab_bar = false
 
+-- various terminal configurations
+local function file_exists(name)
+	local f = io.open(name, "r")
+	if f then
+		f:close()
+		return true
+	end
+	return false
+end
+
+local function git_bash_bin_path()
+	local candidates = {
+		(os.getenv("ProgramFiles") or "") .. "\\Git\\bin\\bash.exe",
+		(os.getenv("LocalAppData") or "") .. "\\Programs\\Git\\bin\\bash.exe",
+		"C:\\Program Files\\Git\\bin\\bash.exe",
+		"C:\\Users\\" .. (os.getenv("USERNAME") or "") .. "\\AppData\\Local\\Programs\\Git\\bin\\bash.exe",
+	}
+	for _, path in ipairs(candidates) do
+		if file_exists(path) then
+			return path
+		end
+	end
+	return "bash.exe"
+end
+
+local function msys2_root()
+	return os.getenv("MSYS2_ROOT") or "C:\\msys64"
+end
+
+local function msys2_home()
+	return msys2_root() .. "\\home\\" .. (os.getenv("USERNAME") or "")
+end
+
+config.default_prog = { git_bash_bin_path(), "--login", "-i" }
+config.launch_menu = {
+	{
+		label = "Git Bash",
+		args = { git_bash_bin_path(), "--login", "-i" },
+	},
+	{
+		label = "WSL Bash",
+		args = { "C:\\Windows\\System32\\bash.exe", "--login", "-i" },
+	},
+	{
+		label = "MSYS2 UCRT64",
+		args = { msys2_root() .. "\\usr\\bin\\bash.exe", "--login", "-i" },
+		cwd = msys2_home(),
+	},
+	{
+		label = "Windows CMD",
+		args = { "cmd.exe" },
+	},
+	{
+		label = "Windows CMD (Admin)",
+		args = { "powershell.exe", "-NoLogo", "-Command", "Start-Process cmd -Verb runAs" },
+	},
+	{
+		label = "PowerShell",
+		args = { "powershell.exe", "-NoLogo" },
+	},
+	{
+		label = "PowerShell (Admin)",
+		args = { "powershell.exe", "-NoLogo", "-Command", "Start-Process powershell -Verb runAs" },
+	},
+}
+
+-- appearance configurations
+
 config.window_background_opacity = 0.90
 config.macos_window_background_blur = 1000000
 
@@ -43,6 +111,8 @@ config.window_padding = {
 	top = 0,
 	bottom = 0,
 }
+
+-- shortcut configurations
 
 config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 1000 }
 local function resize_pane(key, direction)

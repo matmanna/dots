@@ -3,6 +3,7 @@
 Everything I use to develop projects that could be considered either, _a) 🗑️ junk_ or _b) ✨ beautifully-crafted experiences valuing simplicity and openness,_ depending on your perspective.
 
 This config mostly focuses on providing the tools I use to:
+
 - Develop full-stack web applications (React, Svelte, Node) with tools such as Prettier and ESLint
 - Develop mobile apps using flutter (config for this is still WIP)
 - Develop this very config (with Lua)
@@ -10,23 +11,24 @@ This config mostly focuses on providing the tools I use to:
 ## 📖 Table of Contents
 
 - [Neovim Config](#-neovim) (Text Editor)
-- [Wezterm Config](#-wezterm) (Terminal Emulator) 
+- [Wezterm Config](#-wezterm) (Terminal Emulator)
 - [Demo](#-demo)
 
 ## Config Overview(s)
 
 ### ⌨️ Neovim
 
-A fairly minimal kickstart.nvim configuration with added flair. A cozy 📦 Gruvbox theme with a 😺 snazzy tabby-based navigation bar, 💥 stylish noice notifications, 💽 streamlined Neogit VCS control, and a ⏲️ customized lualine with wakatime. 
+A fairly minimal kickstart.nvim configuration with added flair. A cozy 📦 Gruvbox theme with a 😺 snazzy tabby-based navigation bar, 💥 stylish noice notifications, 💽 streamlined Neogit VCS control, and a ⏲️ customized lualine with wakatime.
 
 ### 🌀 WezTerm
 
-Focused on compatibility with the neovim theme, terminal emulation features a 🗓️ statusbar, 💻 compatibility with device UI mode, 🌫️ transparent terminal, and 💾 support for persistent, workspace-based multiplexing.
+Focused on compatibility with the neovim theme, terminal emulation features a 🗓️ statusbar, ☀️ compatibility with device UI mode, 🌫️ transparent terminal, and 💾 support for persistent,🖥️  workspace-based multiplexing.
+
+🪟 Additionally, as a convenience for windows users, Git Bash, Powershell, WSL, and CMD are all configured as shell options in the Wezterm Launch menu.
 
 ## 📸 Demo
 
 ![image](https://github.com/user-attachments/assets/297c3e10-f4e0-43c5-bab1-23afa6476d16)
-
 
 ## 🙌 Acknowledgements
 
@@ -46,5 +48,6 @@ Focused on compatibility with the neovim theme, terminal emulation features a �
   - [ ] also auto-cd alternative workspace panes
 - [ ] demo video
 - [ ] inspect TS types better
-- [ ] python
-
+- [ ] python dev
+- [x] git bash, msys64, windows cmd, powershell
+- [ ] svelte dev
