@@ -2,6 +2,8 @@
 
 Everything I use to develop projects that could be considered either, _a) 🗑️ junk_ or _b) ✨ beautifully-crafted experiences valuing simplicity and openness,_ depending on your perspective.
 
+![dotfiles](https://github.com/user-attachments/assets/a3db50ba-8d0e-4c0f-a614-dc2175748698)
+
 This config mostly focuses on providing the tools I use to:
 
 - Develop full-stack web applications (React, Svelte, Node) with tools such as Prettier and ESLint
