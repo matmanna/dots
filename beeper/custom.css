@@ -1,0 +1,57 @@
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-primary: #689d6a;
+    --color-primary-container: #504945;
+    --color-container-content-base-1: #a89984;
+    --color-secondary-container: #3c3836;
+    --color-container-inside-secondary-container: #504945;
+    --color-tertiary-container: #1d2021;
+    --color-surface-dim: #1d2021;
+    --color-surface: #282828;
+    --color-surface-rgb: from var(--color-surface) r g b;
+    --color-surface-bright: #504945;
+    --color-surface-dark: #fbf1c7;
+    --color-surface-dark-rgb: from var(--color-surface-dark) r g b;
+    --color-on-surface: #ebdbb2;
+    --color-on-surface-rgb: from var(--color-on-surface) r g b;
+    --color-outline: #665c54;
+    --color-outline-variant: #458588;
+    --color-solids-purple: #d3869b;
+    --color-gradient: #83a598;
+    --color-scrim: #1d202185;
+    --color-glass-surface: #28282860;
+    --color-glass-container: #3c383620;
+    --color-mark-as-unread: #fabd2f;
+    --color-mute: #b16286;
+    --color-highlight-reaction: #458588;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --color-primary: #79740e;
+    --color-primary-container: #f2e5bc;
+    --color-container-content-base-1: #7c6f64;
+    --color-secondary-container: #fbf1c7;
+    --color-container-inside-secondary-container: #f2e5bc;
+    --color-tertiary-container: #f9f5d7;
+    --color-surface-dim: #f9f5d7;
+    --color-surface: #fbf1c7;
+    --color-surface-rgb: from var(--color-surface) r g b;
+    --color-surface-bright: #ebdbb2;
+    --color-surface-dark: #282828;
+    --color-surface-dark-rgb: from var(--color-surface-dark) r g b;
+    --color-on-surface: #3c3836;
+    --color-on-surface-rgb: from var(--color-on-surface) r g b;
+    --color-outline: #bdae93;
+    --color-outline-variant: #076678;
+    --color-solids-purple: #8f3f71;
+    --color-gradient: #076678;
+    --color-scrim: #f9f5d785;
+    --color-glass-surface: #fbf1c760;
+    --color-glass-container: #f2e5bc20;
+    --color-mark-as-unread: #b57614;
+    --color-mute: #8f3f71;
+    --color-highlight-reaction: #076678;
+  }
+}

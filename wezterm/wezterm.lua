@@ -6,6 +6,8 @@ local config = wezterm.config_builder()
 
 local appearance = require("appearance")
 
+-- workspace/project configurations
+config.window_close_confirmation = "NeverPrompt"
 local projects = require("projects")
 local workspaces = require("workspaces")
 
@@ -25,14 +27,12 @@ wezterm.on("save-workspaces", function()
 end)
 
 if appearance.is_light() then
-	config.color_scheme = "Gruvbox (Gogh)"
+	config.color_scheme = "Tokyo Night Light"
 else
-	config.color_scheme = "Gruvbox Dark (Gogh)"
+	config.color_scheme = "Tokyo Night"
 end
 
--- config.enable_tab_bar = false
-
--- various terminal configurations
+-- terminal shell configurations
 local function file_exists(name)
 	local f = io.open(name, "r")
 	if f then
@@ -65,7 +65,6 @@ local function msys2_home()
 	return msys2_root() .. "\\home\\" .. (os.getenv("USERNAME") or "")
 end
 
-config.default_prog = { git_bash_bin_path(), "--login", "-i" }
 config.launch_menu = {
 	{
 		label = "Git Bash",
@@ -98,12 +97,50 @@ config.launch_menu = {
 	},
 }
 
+local function split_with_shell(direction)
+	return wezterm.action_callback(function(window, pane)
+		-- Create a lookup table for shells
+		local shell_lookup = {}
+		local choices = {}
+		for i, entry in ipairs(config.launch_menu) do
+			local id = tostring(i)
+			shell_lookup[id] = entry -- stores the args/cwd, etc.
+			table.insert(choices, { label = entry.label, id = id })
+		end
+		window:perform_action(
+			wezterm.action.InputSelector({
+				title = "Select shell for split",
+				choices = choices,
+				action = wezterm.action_callback(function(_, _, id)
+					if not id then
+						return
+					end
+					local entry = shell_lookup[id]
+					if entry then
+						local split_args = {
+							direction = direction,
+							command = { args = entry.args },
+						}
+						if entry.cwd then
+							split_args.cwd = entry.cwd
+						end
+						window:perform_action(wezterm.action.SplitPane(split_args), pane)
+					end
+				end),
+			}),
+			pane
+		)
+	end)
+end
+
 -- appearance configurations
+
+-- config.enable_tab_bar = false
 
 config.window_background_opacity = 0.90
 config.macos_window_background_blur = 1000000
 
-config.window_decorations = "RESIZE"
+config.window_decorations = "INTEGRATED_BUTTONS|RESIZE"
 
 config.window_padding = {
 	left = 0,
@@ -130,7 +167,42 @@ config.key_tables = {
 	},
 }
 
+local bar = wezterm.plugin.require("https://github.com/adriankarlen/bar.wezterm")
+bar.apply_to_config(config, {
+	position = "top",
+
+	modules = {
+		zoom = {
+			enabled = true,
+			icon = wezterm.nerdfonts.md_fullscreen,
+			color = 4,
+		},
+		spotify = {
+			enabled = true,
+			icon = wezterm.nerdfonts.fa_spotify,
+			color = 3,
+			max_width = 64,
+			throttle = 15,
+		},
+	},
+})
+
 config.keys = {
+	{
+		key = "E",
+		mods = "CTRL|SHIFT",
+		action = act.PromptInputLine({
+			description = "Enter new name for tab",
+			action = wezterm.action_callback(function(window, pane, line)
+				-- line will be `nil` if they hit escape without entering anything
+				-- An empty string if they just hit enter
+				-- Or the actual line of text they wrote
+				if line then
+					window:active_tab():set_title(line)
+				end
+			end),
+		}),
+	},
 	{
 		key = "p",
 		mods = "LEADER",
@@ -146,10 +218,10 @@ config.keys = {
 	{ key = "s", mods = "LEADER", action = wezterm.action.EmitEvent("save-workspaces") },
 	{
 		key = "h",
-		mods = "CTRL|SHIFT|ALT",
+		mods = "CTRL|ALT",
 		action = wezterm.action.SplitPane({
 			direction = "Right",
-			size = { Percent = 50 },
+			size = { Percent = 25 },
 		}),
 	},
 	{
@@ -159,11 +231,21 @@ config.keys = {
 	},
 	{
 		key = "v",
-		mods = "CTRL|SHIFT|ALT",
+		mods = "CTRL|ALT",
 		action = wezterm.action.SplitPane({
 			direction = "Down",
-			size = { Percent = 50 },
+			size = { Percent = 25 },
 		}),
+	},
+	{
+		key = "H",
+		mods = "CTRL|SHIFT|ALT",
+		action = split_with_shell("Right"),
+	},
+	{
+		key = "V",
+		mods = "CTRL|SHIFT|ALT",
+		action = split_with_shell("Down"),
 	},
 	{
 		-- When we push LEADER + R...
@@ -229,9 +311,9 @@ end
 
 wezterm.on("update-status", function(window, _)
 	if appearance.is_light() then
-		config.color_scheme = "Gruvbox (Gogh)"
+		config.color_scheme = "Tokyo Night Light"
 	else
-		config.color_scheme = "Gruvbox Dark (Gogh)"
+		config.color_scheme = "Tokyo Night"
 	end
 	local SOLID_LEFT_ARROW = utf8.char(0xe0b2)
 	local segments = segments_for_right_status(window)
@@ -282,7 +364,7 @@ wezterm.on("update-status", function(window, _)
 		table.insert(elements, { Text = " " .. seg .. " " })
 	end
 
-	window:set_right_status(wezterm.format(elements))
+	--window:set_right_status(wezterm.format(elements))
 end)
 
 -- and finally, return the configuration to wezterm

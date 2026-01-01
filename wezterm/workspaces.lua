@@ -53,6 +53,7 @@ local function createPanes(tab, panes, initialSize)
 			firstPane:send_text("cd " .. panes[1].cwd:sub(2) .. " \r") -- hacky way to change directory for the first pane. Hopefully something better comes out
 		else
 			nextPane = nextPane:split({ cwd = nextPaneInfo.cwd, direction = direction, size = size })
+			firstPane:send_text("cd " .. panes[paneIndex].cwd:sub(2) .. " \r")
 		end
 	end
 

@@ -807,13 +807,25 @@ require('lazy').setup({
         typescript = { 'prettierd', 'prettier' },
         javascriptreact = { 'prettierd', 'prettier' },
         typescriptreact = { 'prettierd', 'prettier' },
-        svelte = { 'prettierd', 'prettier' },
+        svelte = { 'prettier' },
         css = { 'prettierd', 'prettier' },
         html = { 'prettierd', 'prettier' },
         json = { 'prettierd', 'prettier' },
         yaml = { 'prettierd', 'prettier' },
-        ['markdown'] = { { 'prettierd', 'prettier' }, 'markdownlint', 'markdown-toc' },
-        ['markdown.mdx'] = { { 'prettierd', 'prettier' }, 'markdownlint', 'markdown-toc' },
+        ['markdown'] = { 'prettierd', 'prettier', 'markdownlint', 'markdown-toc' },
+        ['markdown.mdx'] = { 'prettierd', 'prettier', 'markdownlint', 'markdown-toc' },
+      },
+
+      formatters = {
+        prettierd = {
+          command = 'prettierd',
+          args = { '--stdin-filepath', '$FILENAME' },
+          stdin = true,
+          require_cwd = false,
+        },
+        svelte = {
+          stop_after_first = false, -- disable during debugging
+        },
       },
     },
   },
