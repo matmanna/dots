@@ -2,6 +2,8 @@
 
 Everything I use to develop programming projects, manage my productivity, communicate effectively, and navigate my machine. Take what you want and ignore what you don't.
 
+![dotfiles](https://github.com/user-attachments/assets/a3db50ba-8d0e-4c0f-a614-dc2175748698)
+
 ## 📖 Table of Contents
 
 - [Setup Instructions]
