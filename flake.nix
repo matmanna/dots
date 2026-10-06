@@ -71,11 +71,14 @@
         in
         {
           default = pkgs.mkShell {
+            # Hooks live in the repo; point git at them in every clone.
+            shellHook = "git config core.hooksPath .githooks";
             packages = [
               deploy-rs.packages.${system}.default
               agenix.packages.${system}.default
               pkgs.nixos-anywhere
               pkgs.nixfmt
+              pkgs.gitleaks
             ];
           };
         }

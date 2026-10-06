@@ -1,2 +1,19 @@
+# Nix build outputs
 result
 result-*
+
+# Plaintext secrets must never be committed. Encrypted *.age files are fine.
+*.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+!*.pub
+*.dec
+*.plain
+*.decrypted
+secrets.env
+.direnv/
