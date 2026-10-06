@@ -18,7 +18,7 @@ flake.nix         nixos config + deploy-rs
 machines/trench/  trench's system: k3s, orchard, users
 modules/nixos/    shared bits: zsh, tailscale, fail2ban, backups
 secrets/          agenix, encrypted
-home/             dotfiles for every machine (chezmoi)
+dotfiles/         dotfiles for every machine (chezmoi)
 archive/          old configs
 ```
 
