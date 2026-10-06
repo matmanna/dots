@@ -11,6 +11,7 @@
     ./k3s.nix
     ./orchard.nix
     ./fetch.nix
+    ./nextcloud.nix
   ];
 
   boot.initrd.availableKernelModules = [

@@ -23,7 +23,8 @@ in
         "/var/lib/orchard"
         "/var/lib/rancher/k3s/storage"
         dumpDir
-      ];
+      ]
+      ++ lib.optional config.services.nextcloud.enable config.services.nextcloud.home;
       description = "Paths to back up.";
     };
 
@@ -34,6 +35,8 @@ in
         "node_modules"
         # Live Postgres data directories; the pg_dumpall output is what restores.
         "/var/lib/rancher/k3s/storage/*/pgdata"
+        # Nextcloud thumbnails regenerate on demand.
+        "${config.services.nextcloud.home}/data/appdata_*/preview"
       ];
       description = "restic --exclude patterns.";
     };
@@ -76,6 +79,12 @@ in
             $kubectl -n "$ns" exec "$pod" -c postgres -- pg_dumpall -U postgres |
               ${pkgs.gzip}/bin/gzip > "${dumpDir}/$ns--$name.sql.gz"
           done
+      ''
+      + lib.optionalString config.services.nextcloud.enable ''
+        echo "dumping host postgres: nextcloud"
+        ${pkgs.util-linux}/bin/runuser -u postgres -- \
+          ${config.services.postgresql.package}/bin/pg_dump nextcloud |
+          ${pkgs.gzip}/bin/gzip > "${dumpDir}/host--nextcloud.sql.gz"
       '';
     };
 

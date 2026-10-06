@@ -5,5 +5,6 @@
     ./system/tailscale.nix
     ./system/zsh.nix
     ./services/backup.nix
+    ./services/expose.nix
   ];
 }
