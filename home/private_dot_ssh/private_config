@@ -1,0 +1,16 @@
+Host *
+  # gcr-ssh-agent (GNOME Keyring); works even in processes started
+  # before SSH_AUTH_SOCK was exported, like a running herdr server.
+  IdentityAgent ${XDG_RUNTIME_DIR}/gcr/ssh
+  AddKeysToAgent yes
+
+Host trench
+  HostName 157.173.116.9
+  User matmanna
+  IdentityFile ~/.ssh/id_ed25519
+
+# Break-glass root access; deploy-rs connects as root by IP on its own.
+Host trench-root
+  HostName 157.173.116.9
+  User root
+  IdentityFile ~/.ssh/id_ed25519

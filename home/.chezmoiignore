@@ -1,0 +1,9 @@
+.config/nvim/.git
+
+{{- if eq .chezmoi.hostname "trench" }}
+# Desktop and laptop-only bits.
+.config/niri
+.config/ghostty
+.config/fish
+.ssh
+{{- end }}

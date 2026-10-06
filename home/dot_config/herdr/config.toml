@@ -1,0 +1,9 @@
+onboarding = false
+[ui]
+agent_panel_sort = "priority"
+
+[[keys.command]]
+key = "prefix+p"
+type = "plugin_action"
+command = "jt.command-palette.open"
+description = "Command palette"

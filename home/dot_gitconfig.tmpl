@@ -1,0 +1,17 @@
+[user]
+	name = Mat M
+	email = git@matmanna.dev
+[safe]
+	directory = /app
+	directory = /app
+	directory = /app
+	directory = /app
+	directory = /app
+{{- if lookPath "gh" }}
+[credential "https://github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+{{- end }}
