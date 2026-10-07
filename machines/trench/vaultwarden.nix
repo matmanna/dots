@@ -30,5 +30,9 @@ in
     };
   };
 
-  selfhost.expose.vaultwarden = { inherit domain port; };
+  selfhost.expose.vaultwarden = {
+    inherit domain port;
+    title = "vaultwarden";
+    icon = "di:vaultwarden";
+  };
 }

@@ -50,5 +50,9 @@ in
 
   # The seeded default admin (demo@dawarich.app) was replaced by hand before
   # this went public; see the dawarich-admin secret. Do the same on a rebuild.
-  selfhost.expose.dawarich = { inherit domain port; };
+  selfhost.expose.dawarich = {
+    inherit domain port;
+    title = "dawarich";
+    icon = "di:dawarich";
+  };
 }

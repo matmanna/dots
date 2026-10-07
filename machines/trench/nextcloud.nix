@@ -59,5 +59,9 @@ in
   ];
 
   selfhost.exposeHostAddress = "157.173.116.9";
-  selfhost.expose.nextcloud = { inherit domain port; };
+  selfhost.expose.nextcloud = {
+    inherit domain port;
+    title = "nextcloud";
+    icon = "di:nextcloud";
+  };
 }

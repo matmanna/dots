@@ -101,6 +101,16 @@ in
     type = lib.types.attrsOf (
       lib.types.submodule {
         options = {
+          title = lib.mkOption {
+            type = lib.types.nullOr lib.types.str;
+            default = null;
+            description = "Name on the dashboard. null hides it there.";
+          };
+          icon = lib.mkOption {
+            type = lib.types.str;
+            default = "";
+            description = "Glance icon, e.g. di:nextcloud (dashboard-icons) or si:github.";
+          };
           domain = lib.mkOption {
             type = lib.types.str;
             description = "Public hostname. Needs a DNS record pointing at this box.";

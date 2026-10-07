@@ -14,6 +14,7 @@
     ./nextcloud.nix
     ./dawarich.nix
     ./vaultwarden.nix
+    ./dashboard.nix
   ];
 
   boot.initrd.availableKernelModules = [

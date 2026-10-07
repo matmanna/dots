@@ -26,6 +26,12 @@ in
   "vaultwarden/env.age".publicKeys = onTrench;
   "vaultwarden/admin-token.age".publicKeys = onTrench;
 
+  # Glance dashboard login: secret-key signs sessions, password-hash is what
+  # the server checks, password is the plaintext for user "matmanna".
+  "glance/secret-key.age".publicKeys = onTrench;
+  "glance/password-hash.age".publicKeys = onTrench;
+  "glance/password.age".publicKeys = onTrench;
+
   # restic: env holds the storage credentials (e.g. AWS_ACCESS_KEY_ID /
   # AWS_SECRET_ACCESS_KEY for R2 or B2), repo the repository URL, password
   # the repository encryption password.
