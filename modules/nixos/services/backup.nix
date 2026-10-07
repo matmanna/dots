@@ -24,8 +24,17 @@ in
         "/var/lib/rancher/k3s/storage"
         dumpDir
       ]
-      ++ lib.optional config.services.nextcloud.enable config.services.nextcloud.home;
+      ++ lib.optional config.services.nextcloud.enable config.services.nextcloud.home
+      ++ lib.optional config.services.dawarich.enable "/var/lib/dawarich";
       description = "Paths to back up.";
+    };
+
+    hostDatabases = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default =
+        lib.optional config.services.nextcloud.enable "nextcloud"
+        ++ lib.optional config.services.dawarich.enable config.services.dawarich.database.name;
+      description = "Databases on the host's PostgreSQL to pg_dump before each backup.";
     };
 
     exclude = lib.mkOption {
@@ -80,12 +89,12 @@ in
               ${pkgs.gzip}/bin/gzip > "${dumpDir}/$ns--$name.sql.gz"
           done
       ''
-      + lib.optionalString config.services.nextcloud.enable ''
-        echo "dumping host postgres: nextcloud"
+      + lib.concatMapStrings (db: ''
+        echo "dumping host postgres: ${db}"
         ${pkgs.util-linux}/bin/runuser -u postgres -- \
-          ${config.services.postgresql.package}/bin/pg_dump nextcloud |
-          ${pkgs.gzip}/bin/gzip > "${dumpDir}/host--nextcloud.sql.gz"
-      '';
+          ${config.services.postgresql.package}/bin/pg_dump ${db} |
+          ${pkgs.gzip}/bin/gzip > "${dumpDir}/host--${db}.sql.gz"
+      '') cfg.hostDatabases;
     };
 
     systemd.services.restic-prune-trench = {

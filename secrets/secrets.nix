@@ -18,6 +18,9 @@ in
   # Nextcloud admin account password (user "admin").
   "nextcloud-admin.age".publicKeys = onTrench;
 
+  # Dawarich admin account password (vps@matmanna.dev).
+  "dawarich-admin.age".publicKeys = onTrench;
+
   # restic: env holds the storage credentials (e.g. AWS_ACCESS_KEY_ID /
   # AWS_SECRET_ACCESS_KEY for R2 or B2), repo the repository URL, password
   # the repository encryption password.
