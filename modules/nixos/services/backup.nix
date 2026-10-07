@@ -25,7 +25,10 @@ in
         dumpDir
       ]
       ++ lib.optional config.services.nextcloud.enable config.services.nextcloud.home
-      ++ lib.optional config.services.dawarich.enable "/var/lib/dawarich";
+      ++ lib.optional config.services.dawarich.enable "/var/lib/dawarich"
+      ++ lib.optional (
+        config.services.vaultwarden.enable && config.services.vaultwarden.backupDir != null
+      ) config.services.vaultwarden.backupDir;
       description = "Paths to back up.";
     };
 

@@ -21,6 +21,11 @@ in
   # Dawarich admin account password (vps@matmanna.dev).
   "dawarich-admin.age".publicKeys = onTrench;
 
+  # Vaultwarden: env holds ADMIN_TOKEN (argon2 hash) for the server,
+  # admin-token is the plaintext token you type into /admin.
+  "vaultwarden/env.age".publicKeys = onTrench;
+  "vaultwarden/admin-token.age".publicKeys = onTrench;
+
   # restic: env holds the storage credentials (e.g. AWS_ACCESS_KEY_ID /
   # AWS_SECRET_ACCESS_KEY for R2 or B2), repo the repository URL, password
   # the repository encryption password.
