@@ -164,7 +164,10 @@ let
     };
 
     metrics = {
-      enabled = true;
+      # Off for now to save CPU on trench (VictoriaMetrics, vmagent,
+      # kube-state-metrics, node-exporter and their API polling). Orchard's
+      # per-app charts go away; Glance's pods widget still shows usage.
+      enabled = false;
       victoriametrics = {
         retention = "7d";
         storage = {
