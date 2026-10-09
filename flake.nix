@@ -25,6 +25,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Same pin Kieran runs; the knot NixOS module lives in this repo.
+    tangled = {
+      url = "git+https://tangled.org/tangled.org/core?rev=1d379a324497da39a27e49453c72615607a9b199";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Stable is too old for deploy-rs.
     deploy-rs = {
       url = "github:serokell/deploy-rs";

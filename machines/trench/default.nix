@@ -17,6 +17,7 @@
     ./vaultwarden.nix
     ./immich.nix
     ./media.nix
+    ./knot.nix
     ./dashboard.nix
   ];
 

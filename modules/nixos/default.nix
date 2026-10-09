@@ -7,5 +7,6 @@
     ./services/backup.nix
     ./services/expose.nix
     ./services/dashboard.nix
+    ./services/tangled.nix
   ];
 }
