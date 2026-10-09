@@ -17,6 +17,11 @@ in
       # Pin `nix run nixpkgs#…` and `<nixpkgs>` to this flake's inputs instead
       # of whatever the global registry or channels say today.
       flake-registry = "";
+      # deploy-rs copies closures as the wheel user before sudo-activating.
+      trusted-users = [
+        "root"
+        "@wheel"
+      ];
       nix-path = config.nix.nixPath;
     };
     channel.enable = false;

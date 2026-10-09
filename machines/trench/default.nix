@@ -64,7 +64,6 @@
   networking.firewall = {
     enable = true;
     allowedTCPPorts = [
-      22
       80
       443
     ];
@@ -77,10 +76,13 @@
 
   services.openssh = {
     enable = true;
+    # SSH only over Tailscale (tailscale0 is a trusted interface). If the
+    # tailnet is down, log in at the Contabo VNC console as matmanna.
+    openFirewall = false;
     settings = {
       PasswordAuthentication = false;
       KbdInteractiveAuthentication = false;
-      PermitRootLogin = "prohibit-password";
+      PermitRootLogin = "no";
     };
   };
 

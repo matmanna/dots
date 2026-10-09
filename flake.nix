@@ -54,8 +54,10 @@
       # rollback reverts the switch if the box stops answering over SSH, which
       # on a VPS with hand-written static networking beats the VNC console.
       deploy.nodes.trench = {
-        hostname = "157.173.116.9";
-        sshUser = "root";
+        # Over Tailscale; public SSH is closed.
+        hostname = "trench.tail4a3e06.ts.net";
+        # Activates as root through passwordless sudo.
+        sshUser = "matmanna";
         profiles.system = {
           user = "root";
           path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.trench;

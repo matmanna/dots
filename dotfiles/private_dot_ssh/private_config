@@ -4,13 +4,9 @@ Host *
   IdentityAgent ${XDG_RUNTIME_DIR}/gcr/ssh
   AddKeysToAgent yes
 
+# Over Tailscale (MagicDNS). Public port 22 is closed; if the tailnet is down,
+# use the Contabo VNC console. Root: `ssh trench` then `sudo -i`.
 Host trench
-  HostName 157.173.116.9
+  HostName trench.tail4a3e06.ts.net
   User matmanna
-  IdentityFile ~/.ssh/id_ed25519
-
-# Break-glass root access; deploy-rs connects as root by IP on its own.
-Host trench-root
-  HostName 157.173.116.9
-  User root
   IdentityFile ~/.ssh/id_ed25519
