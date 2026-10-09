@@ -15,6 +15,7 @@
     ./nextcloud.nix
     ./dawarich.nix
     ./vaultwarden.nix
+    ./immich.nix
     ./dashboard.nix
   ];
 

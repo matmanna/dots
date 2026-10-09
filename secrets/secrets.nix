@@ -26,6 +26,9 @@ in
   # Dawarich admin account password (vps@matmanna.dev).
   "dawarich-admin.age".publicKeys = onTrench;
 
+  # Immich admin account password (vps@matmanna.dev).
+  "immich-admin.age".publicKeys = onTrench;
+
   # Vaultwarden: env holds ADMIN_TOKEN (argon2 hash) for the server,
   # admin-token is the plaintext token you type into /admin.
   "vaultwarden/env.age".publicKeys = onTrench;
