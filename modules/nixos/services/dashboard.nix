@@ -1,9 +1,13 @@
-# Glance start page behind a login. Every selfhost.expose entry with a title
-# shows up automatically (uptime monitor + link), next to extra links such as
-# Orchard-hosted apps, so the list can't drift from what is actually deployed.
+# Glance start page, reachable only over Tailscale: it listens on localhost
+# and `tailscale serve` publishes it at https://<host>.<tailnet>.ts.net with a
+# Tailscale-issued certificate, so the tailnet login is the authentication.
+# Every selfhost.expose entry with a title shows up automatically (uptime
+# monitor + link), next to extra links such as Orchard-hosted apps, so the list
+# can't drift from what is actually deployed.
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 let
@@ -21,29 +25,16 @@ in
   options.selfhost.dashboard = {
     enable = lib.mkEnableOption "the Glance dashboard";
 
-    domain = lib.mkOption {
-      type = lib.types.str;
-      description = "Public hostname of the dashboard.";
-    };
-
     port = lib.mkOption {
       type = lib.types.port;
       default = 8083;
+      description = "Port Glance listens on, on localhost only.";
     };
 
-    user = lib.mkOption {
-      type = lib.types.str;
-      description = "Login name.";
-    };
-
-    secretKeyFile = lib.mkOption {
-      type = lib.types.path;
-      description = "File with the session signing key (glance secret:make).";
-    };
-
-    passwordHashFile = lib.mkOption {
-      type = lib.types.path;
-      description = "File with the bcrypt hash of the password (glance password:hash).";
+    httpsPort = lib.mkOption {
+      type = lib.types.port;
+      default = 443;
+      description = "Port `tailscale serve` publishes the dashboard on, on the tailnet.";
     };
 
     extraSites = lib.mkOption {
@@ -64,14 +55,8 @@ in
       enable = true;
       settings = {
         server = {
-          host = "0.0.0.0";
+          host = "127.0.0.1";
           inherit (cfg) port;
-          # Behind Traefik: trust X-Forwarded-For for the login rate limit.
-          proxied = true;
-        };
-        auth = {
-          secret-key._secret = cfg.secretKeyFile;
-          users.${cfg.user}.password-hash._secret = cfg.passwordHashFile;
         };
         theme = {
           # Catppuccin Mocha.
@@ -131,10 +116,25 @@ in
       };
     };
 
-    selfhost.expose.glance = {
-      inherit (cfg) domain port;
-      # The dashboard doesn't list itself.
-      title = null;
+    # Re-applied on every boot and deploy; serve config is idempotent.
+    systemd.services.glance-tailscale-serve = {
+      description = "Publish Glance on the tailnet with tailscale serve";
+      wantedBy = [ "multi-user.target" ];
+      after = [
+        "tailscaled.service"
+        "glance.service"
+      ];
+      wants = [ "tailscaled.service" ];
+      path = [ config.services.tailscale.package ];
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+        Restart = "on-failure";
+        RestartSec = "30s";
+      };
+      script = ''
+        tailscale serve --bg --https=${toString cfg.httpsPort} http://127.0.0.1:${toString cfg.port}
+      '';
     };
   };
 }

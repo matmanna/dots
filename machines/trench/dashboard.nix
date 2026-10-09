@@ -1,15 +1,7 @@
-# home.matm.icu: Glance start page, login required.
-{ config, ... }:
+# Glance start page at https://trench.tail4a3e06.ts.net (tailnet only).
 {
-  age.secrets."glance/secret-key".file = ../../secrets/glance/secret-key.age;
-  age.secrets."glance/password-hash".file = ../../secrets/glance/password-hash.age;
-
   selfhost.dashboard = {
     enable = true;
-    domain = "home.matm.icu";
-    user = "matmanna";
-    secretKeyFile = config.age.secrets."glance/secret-key".path;
-    passwordHashFile = config.age.secrets."glance/password-hash".path;
 
     # Apps that aren't Nix-hosted, so selfhost.expose doesn't know them.
     extraSites = [
