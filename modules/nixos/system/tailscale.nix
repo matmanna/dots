@@ -17,6 +17,10 @@ in
     };
     networking.firewall.trustedInterfaces = [ "tailscale0" ];
 
+    # Every tailnet-only service rides on tailscaled: keep it responsive
+    # when something else pegs the CPU.
+    systemd.services.tailscaled.serviceConfig.CPUWeight = 500;
+
     # From taciturnaxolotl/dots (tailscale-deferred-restart.nix): once deploys
     # run over the tailnet, restarting tailscaled mid-activation cuts the
     # deploy's own SSH connection and deploy-rs rolls back a good deploy. So

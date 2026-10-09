@@ -124,4 +124,17 @@
       ];
 
   services.flaresolverr.enable = true;
+
+  # Each FlareSolverr attempt runs a headless Chrome flat out for up to a
+  # minute; failing indexers retry all day. Cap it so it can never starve
+  # Tailscale or the apps (it once pushed trench to ~90% CPU).
+  systemd.services.flaresolverr.serviceConfig = {
+    CPUQuota = "100%";
+    CPUWeight = 20;
+    MemoryMax = "2G";
+    Nice = 10;
+  };
+
+  # Background batch jobs yield to interactive services.
+  systemd.services.recyclarr.serviceConfig.CPUWeight = 20;
 }
