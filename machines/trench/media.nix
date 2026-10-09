@@ -4,6 +4,7 @@
 #   sonarr    http://trench:8989
 #   radarr    http://trench:7878
 #   prowlarr  http://trench:9696
+#   seerr     http://trench:5055   (browse + request, Jellyfin logins)
 #   qbittorrent http://trench:5252 (qui)
 # qBittorrent runs only inside an AirVPN WireGuard tunnel (nixarr.vpn, its
 # own network namespace, so no traffic can leave outside the VPN):
@@ -23,6 +24,7 @@
     prowlarr.enable = true;
     sonarr.enable = true;
     radarr.enable = true;
+    seerr.enable = true;
 
     vpn = {
       enable = true;
@@ -66,6 +68,11 @@
           title = "prowlarr";
           icon = "di:prowlarr";
           port = 9696;
+        }
+        {
+          title = "seerr";
+          icon = "di:jellyseerr";
+          port = 5055;
         }
         {
           title = "qbittorrent";
