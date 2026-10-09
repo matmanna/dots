@@ -1,4 +1,5 @@
 {
+  config,
   modulesPath,
   pkgs,
   inputs,
@@ -88,6 +89,8 @@
     matmanna = {
       isNormalUser = true;
       extraGroups = [ "wheel" ];
+      # Password only matters at the Contabo VNC console; SSH is key-only.
+      hashedPasswordFile = config.age.secrets.matmanna-password-hash.path;
       openssh.authorizedKeys.keys = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHK9lZa42dteyaGWWK4qfIyDV/CsJT8ZQjdORJCS7xSB git@matmanna.dev"
       ];
@@ -97,7 +100,12 @@
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHK9lZa42dteyaGWWK4qfIyDV/CsJT8ZQjdORJCS7xSB git@matmanna.dev"
     ];
   };
-  # Key-only SSH and no password set, so sudo can't prompt for one.
+  # Users and passwords come only from this config, re-applied every deploy.
+  users.mutableUsers = false;
+  age.secrets.matmanna-password-hash.file = ../../secrets/matmanna-password-hash.age;
+
+  # Key-only SSH, so sudo doesn't prompt; the console password is for the
+  # VNC console login alone.
   security.sudo.wheelNeedsPassword = false;
 
   # BuildKit and many pods watch lots of files.

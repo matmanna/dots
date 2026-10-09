@@ -15,6 +15,11 @@ in
   # SSO_ENCRYPTION_KEY, MCP_SERVICE_TOKEN, REGISTRY_PASSWORD.
   "orchard.age".publicKeys = onTrench;
 
+  # Login password for "matmanna" on trench, only for the Contabo VNC console
+  # (SSH stays key-only): hash is what the system reads, password is for you.
+  "matmanna-password-hash.age".publicKeys = onTrench;
+  "matmanna-password.age".publicKeys = onTrench;
+
   # Nextcloud admin account password (user "admin").
   "nextcloud-admin.age".publicKeys = onTrench;
 
