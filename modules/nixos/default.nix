@@ -8,5 +8,6 @@
     ./services/expose.nix
     ./services/dashboard.nix
     ./services/tangled.nix
+    ./services/monitoring.nix
   ];
 }

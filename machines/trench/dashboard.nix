@@ -14,6 +14,10 @@
 
     links = [
       {
+        title = "netdata (per-app usage)";
+        url = "https://trench.tail4a3e06.ts.net:19999";
+      }
+      {
         title = "dots repo";
         url = "https://github.com/matmanna/dots";
       }

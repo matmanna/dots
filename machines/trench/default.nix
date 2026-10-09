@@ -122,6 +122,7 @@
   selfhost.fail2ban.enable = true;
   selfhost.tailscale.enable = true;
   selfhost.zsh.enable = true;
+  selfhost.monitoring.enable = true;
 
   zramSwap.enable = true;
 

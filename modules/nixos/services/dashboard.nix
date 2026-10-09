@@ -57,6 +57,9 @@ in
         server = {
           host = "127.0.0.1";
           inherit (cfg) port;
+          # Static files (e.g. top-services.json from selfhost.monitoring),
+          # served under /assets/.
+          assets-path = "/var/lib/selfhost-dashboard";
         };
         theme = {
           # Catppuccin Mocha.
@@ -79,9 +82,30 @@ in
                       {
                         type = "local";
                         name = config.networking.hostName;
+                        # Only the root disk, not every k3s volume mount.
+                        hide-mountpoints-by-default = true;
+                        mountpoints."/".name = "disk";
                       }
                     ];
                   }
+                ]
+                ++ lib.optional config.selfhost.monitoring.enable {
+                  type = "custom-api";
+                  title = "services · ram / cpu";
+                  cache = "1m";
+                  url = "http://127.0.0.1:${toString cfg.port}/assets/top-services.json";
+                  template = ''
+                    <ul class="list list-gap-4">
+                    {{ range .JSON.Array "services" }}
+                      <li class="flex justify-between">
+                        <span>{{ .String "name" }}</span>
+                        <span class="color-highlight">{{ .Int "ram" }} MiB · {{ .Float "cpu" }}%</span>
+                      </li>
+                    {{ end }}
+                    </ul>
+                  '';
+                }
+                ++ [
                   {
                     type = "bookmarks";
                     groups = [ { links = cfg.links; } ];
@@ -115,6 +139,10 @@ in
         ];
       };
     };
+
+    # Must exist before Glance starts, or it refuses its config.
+    systemd.tmpfiles.rules = [ "d /var/lib/selfhost-dashboard 0755 root root -" ];
+    systemd.services.glance.serviceConfig.Restart = lib.mkForce "always";
 
     # Re-applied on every boot and deploy; serve config is idempotent.
     systemd.services.glance-tailscale-serve = {
