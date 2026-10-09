@@ -89,22 +89,40 @@ in
                     ];
                   }
                 ]
-                ++ lib.optional config.selfhost.monitoring.enable {
-                  type = "custom-api";
-                  title = "services · ram / cpu";
-                  cache = "1m";
-                  url = "http://127.0.0.1:${toString cfg.port}/assets/top-services.json";
-                  template = ''
-                    <ul class="list list-gap-4">
-                    {{ range .JSON.Array "services" }}
-                      <li class="flex justify-between">
-                        <span>{{ .String "name" }}</span>
-                        <span class="color-highlight">{{ .Int "ram" }} MiB · {{ .Float "cpu" }}%</span>
-                      </li>
-                    {{ end }}
-                    </ul>
-                  '';
-                }
+                ++ lib.optionals config.selfhost.monitoring.enable [
+                  {
+                    type = "custom-api";
+                    title = "services · ram / cpu";
+                    cache = "1m";
+                    url = "http://127.0.0.1:${toString cfg.port}/assets/usage.json";
+                    template = ''
+                      <ul class="list list-gap-4">
+                      {{ range .JSON.Array "services" }}
+                        <li class="flex justify-between">
+                          <span>{{ .String "name" }}</span>
+                          <span class="color-highlight">{{ .Int "ram" }} MiB · {{ .Float "cpu" }}%</span>
+                        </li>
+                      {{ end }}
+                      </ul>
+                    '';
+                  }
+                  {
+                    type = "custom-api";
+                    title = "pods · ram / cpu";
+                    cache = "1m";
+                    url = "http://127.0.0.1:${toString cfg.port}/assets/usage.json";
+                    template = ''
+                      <ul class="list list-gap-4">
+                      {{ range .JSON.Array "pods" }}
+                        <li class="flex justify-between">
+                          <span>{{ .String "name" }}</span>
+                          <span class="color-highlight">{{ .Int "ram" }} MiB · {{ .Float "cpu" }}%</span>
+                        </li>
+                      {{ end }}
+                      </ul>
+                    '';
+                  }
+                ]
                 ++ [
                   {
                     type = "bookmarks";
