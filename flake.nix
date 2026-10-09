@@ -20,6 +20,11 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
+    nixarr = {
+      url = "github:nix-media-server/nixarr";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Stable is too old for deploy-rs.
     deploy-rs = {
       url = "github:serokell/deploy-rs";
@@ -45,6 +50,7 @@
         modules = [
           disko.nixosModules.disko
           agenix.nixosModules.default
+          inputs.nixarr.nixosModules.default
           ./modules/nixos
           ./machines/trench
         ];

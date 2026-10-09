@@ -16,6 +16,7 @@
     ./dawarich.nix
     ./vaultwarden.nix
     ./immich.nix
+    ./media.nix
     ./dashboard.nix
   ];
 
