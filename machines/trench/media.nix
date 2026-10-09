@@ -33,22 +33,37 @@
     recyclarr = {
       enable = true;
       configuration = {
+        # Mirrors recyclarr's official v8 templates "web-1080p" and
+        # "hd-bluray-web" (github.com/recyclarr/config-templates).
         sonarr.series = {
           base_url = "http://localhost:8989";
           api_key = "!env_var SONARR_API_KEY";
-          include = [
-            { template = "sonarr-quality-definition-series"; }
-            { template = "sonarr-v4-quality-profile-web-1080p"; }
-            { template = "sonarr-v4-custom-formats-web-1080p"; }
+          quality_definition.type = "series";
+          quality_profiles = [
+            {
+              trash_id = "72dae194fc92bf828f32cde7744e51a1"; # WEB-1080p
+              reset_unmatched_scores.enabled = true;
+            }
+          ];
+          custom_format_groups.add = [
+            { trash_id = "158188097a58d7687dee647e04af0da3"; } # [Optional] Golden Rule HD
+            { trash_id = "85fae4a2294965b75710ef2989c850eb"; } # [Streaming Services] HD/UHD boost
+            { trash_id = "59c3af66780d08332fdc64e68297098f"; } # [Unwanted] Unwanted Formats
           ];
         };
         radarr.movies = {
           base_url = "http://localhost:7878";
           api_key = "!env_var RADARR_API_KEY";
-          include = [
-            { template = "radarr-quality-definition-movie"; }
-            { template = "radarr-quality-profile-hd-bluray-web"; }
-            { template = "radarr-custom-formats-hd-bluray-web"; }
+          quality_definition.type = "movie";
+          quality_profiles = [
+            {
+              trash_id = "d1d67249d3890e49bc12e275d989a7e9"; # HD Bluray + WEB
+              reset_unmatched_scores.enabled = true;
+            }
+          ];
+          custom_format_groups.add = [
+            { trash_id = "f8bf8eab4617f12dfdbd16303d8da245"; } # [Optional] Golden Rule HD
+            { trash_id = "a3ac6af01d78e4f21fcb75f601ac96df"; } # [Unwanted] Unwanted Formats
           ];
         };
       };
