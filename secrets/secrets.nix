@@ -34,6 +34,10 @@ in
   "vaultwarden/env.age".publicKeys = onTrench;
   "vaultwarden/admin-token.age".publicKeys = onTrench;
 
+  # AirVPN WireGuard config for trench's qBittorrent namespace (device "trench",
+  # Switzerland, forwarded port 7208).
+  "airvpn-trench.age".publicKeys = onTrench;
+
   # restic: env holds the storage credentials (e.g. AWS_ACCESS_KEY_ID /
   # AWS_SECRET_ACCESS_KEY for R2 or B2), repo the repository URL, password
   # the repository encryption password.
