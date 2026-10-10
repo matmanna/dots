@@ -1,14 +1,14 @@
 # Media stack via nixarr, reachable only over Tailscale: nixarr keeps every
 # port closed in the firewall and tailscale0 is a trusted interface.
-#   jellyfin  http://trench:8096
-#   sonarr    http://trench:8989
-#   radarr    http://trench:7878
-#   prowlarr  http://trench:9696
-#   seerr     http://trench:5055   (browse + request, Jellyfin logins)
-#   bazarr    http://trench:6767   (fetches missing subtitles)
+#   jellyfin  https://trench.tail4a3e06.ts.net:18096
+#   sonarr    https://trench.tail4a3e06.ts.net:18989
+#   radarr    https://trench.tail4a3e06.ts.net:17878
+#   prowlarr  https://trench.tail4a3e06.ts.net:19696
+#   seerr     https://trench.tail4a3e06.ts.net:15055   (browse + request, Jellyfin logins)
+#   bazarr    https://trench.tail4a3e06.ts.net:16767   (fetches missing subtitles)
 #   flaresolverr http://localhost:8191 (Prowlarr indexer proxy for
 #                Cloudflare-protected indexers; not reachable from outside)
-#   qbittorrent http://trench:5252 (qui)
+#   qbittorrent https://trench.tail4a3e06.ts.net:15252 (qui)
 # qBittorrent runs only inside an AirVPN WireGuard tunnel (nixarr.vpn, its
 # own network namespace, so no traffic can leave outside the VPN):
 # torrenting from Contabo's own IP risks the whole VPS. Port 7208 is
@@ -89,11 +89,21 @@ in
     };
   };
 
+  selfhost.tailnetServe = {
+    jellyfin.port = 8096;
+    sonarr.port = 8989;
+    radarr.port = 7878;
+    prowlarr.port = 9696;
+    seerr.port = 5055;
+    bazarr.port = 6767;
+    qui.port = 5252;
+  };
+
   selfhost.dashboard.extraSites =
     map
       (s: {
         inherit (s) title icon;
-        url = "http://trench.tail4a3e06.ts.net:${toString s.port}";
+        url = "https://trench.tail4a3e06.ts.net:${toString (s.port + 10000)}";
       })
       [
         {

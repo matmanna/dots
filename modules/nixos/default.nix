@@ -9,5 +9,6 @@
     ./services/dashboard.nix
     ./services/tangled.nix
     ./services/monitoring.nix
+    ./services/tailnet-serve.nix
   ];
 }
