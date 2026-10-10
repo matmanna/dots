@@ -5,6 +5,7 @@
 #   radarr    http://trench:7878
 #   prowlarr  http://trench:9696
 #   seerr     http://trench:5055   (browse + request, Jellyfin logins)
+#   bazarr    http://trench:6767   (fetches missing subtitles)
 #   flaresolverr http://localhost:8191 (Prowlarr indexer proxy for
 #                Cloudflare-protected indexers; not reachable from outside)
 #   qbittorrent http://trench:5252 (qui)
@@ -30,6 +31,7 @@ in
     sonarr.enable = true;
     radarr.enable = true;
     seerr.enable = true;
+    bazarr.enable = true;
 
     # TRaSH Guides quality profiles and custom formats, synced daily. API
     # keys come from nixarr's own extracted copies.
@@ -118,6 +120,11 @@ in
           title = "seerr";
           icon = "di:jellyseerr";
           port = 5055;
+        }
+        {
+          title = "bazarr";
+          icon = "di:bazarr";
+          port = 6767;
         }
         {
           title = "qbittorrent";
