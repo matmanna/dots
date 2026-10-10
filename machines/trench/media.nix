@@ -13,7 +13,10 @@
 # torrenting from Contabo's own IP risks the whole VPS. Port 7208 is
 # forwarded to it by AirVPN.
 # The library moves to the Hetzner Storage Box once that exists.
-{ config, ... }:
+{ config, pkgs, ... }:
+let
+  keyFile = app: "/data/.state/nixarr/secrets/${app}.api-key";
+in
 {
   age.secrets.airvpn-trench.file = ../../secrets/airvpn-trench.age;
 
@@ -140,7 +143,97 @@
 
   # Torrent status on the dashboard. qBittorrent's API needs no login from
   # the host side of the VPN namespace (nixarr whitelists 192.168.15.0/24).
+  # Sonarr's calendar wants explicit dates, which Glance can't compute, so a
+  # timer fetches the next 7 days into the dashboard's assets dir.
+  systemd.services.dashboard-upcoming = {
+    description = "Fetch upcoming episodes from Sonarr for the dashboard";
+    after = [ "sonarr.service" ];
+    path = [
+      pkgs.curl
+      pkgs.jq
+      pkgs.coreutils
+    ];
+    serviceConfig = {
+      Type = "oneshot";
+      CPUWeight = 20;
+    };
+    script = ''
+      key=$(cat ${keyFile "sonarr"})
+      start=$(date -u +%Y-%m-%d)
+      end=$(date -u -d '+7 days' +%Y-%m-%d)
+      curl -sf -H "X-Api-Key: $key" \
+        "http://localhost:8989/api/v3/calendar?start=$start&end=$end&includeSeries=true" \
+        | jq '{episodes: [.[] | {
+            series: .series.title,
+            code: ("S" + (.seasonNumber | tostring | if length < 2 then "0" + . else . end)
+                 + "E" + (.episodeNumber | tostring | if length < 2 then "0" + . else . end)),
+            title, airDateUtc, hasFile }]}' \
+        > /var/lib/selfhost-dashboard/upcoming.json.tmp
+      mv /var/lib/selfhost-dashboard/upcoming.json.tmp /var/lib/selfhost-dashboard/upcoming.json
+    '';
+  };
+  systemd.timers.dashboard-upcoming = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnBootSec = "2min";
+      OnUnitActiveSec = "15min";
+    };
+  };
+
   selfhost.dashboard.extraWidgets = [
+    {
+      type = "custom-api";
+      title = "downloads";
+      cache = "1m";
+      url = "http://localhost:8989/api/v3/queue?pageSize=10&includeSeries=true&includeEpisode=true";
+      headers."X-Api-Key"._secret = keyFile "sonarr";
+      subrequests.radarr = {
+        url = "http://localhost:7878/api/v3/queue?pageSize=10&includeMovie=true";
+        headers."X-Api-Key"._secret = keyFile "radarr";
+      };
+      template = ''
+        {{ $movies := .Subrequest "radarr" }}
+        {{ if and (eq (.JSON.Int "totalRecords") 0) (eq ($movies.JSON.Int "totalRecords") 0) }}
+          <p class="color-subdue">nothing downloading</p>
+        {{ else }}
+        <ul class="list list-gap-8">
+        {{ range .JSON.Array "records" }}
+          <li class="flex justify-between">
+            <span class="text-truncate">{{ .String "series.title" }} · S{{ printf "%02d" (.Int "episode.seasonNumber") }}E{{ printf "%02d" (.Int "episode.episodeNumber") }}</span>
+            <span class="color-highlight">{{ if gt (.Float "size") 0.0 }}{{ printf "%.0f" (mul (sub 1.0 (div (.Float "sizeleft") (.Float "size"))) 100) }}%{{ end }} · {{ .String "status" }}</span>
+          </li>
+        {{ end }}
+        {{ range $movies.JSON.Array "records" }}
+          <li class="flex justify-between">
+            <span class="text-truncate">{{ .String "movie.title" }} ({{ .Int "movie.year" }})</span>
+            <span class="color-highlight">{{ if gt (.Float "size") 0.0 }}{{ printf "%.0f" (mul (sub 1.0 (div (.Float "sizeleft") (.Float "size"))) 100) }}%{{ end }} · {{ .String "status" }}</span>
+          </li>
+        {{ end }}
+        </ul>
+        {{ end }}
+      '';
+    }
+    {
+      type = "custom-api";
+      title = "upcoming episodes";
+      cache = "15m";
+      url = "http://127.0.0.1:${toString config.selfhost.dashboard.port}/assets/upcoming.json";
+      template = ''
+        {{ $eps := .JSON.Array "episodes" }}
+        {{ if eq (len $eps) 0 }}
+          <p class="color-subdue">nothing airing in the next 7 days</p>
+        {{ else }}
+        <ul class="list list-gap-8">
+        {{ range $eps }}
+          <li class="flex justify-between">
+            <span class="text-truncate">{{ .String "series" }} · {{ .String "code" }}</span>
+            <span class="color-highlight" {{ .String "airDateUtc" | parseTime "rfc3339" | toRelativeTime }}></span>
+          </li>
+        {{ end }}
+        </ul>
+        {{ end }}
+      '';
+    }
     {
       type = "custom-api";
       title = "torrents";

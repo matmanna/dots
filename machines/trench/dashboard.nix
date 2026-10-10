@@ -12,6 +12,42 @@
       }
     ];
 
+    sideWidgets = [
+      {
+        type = "group";
+        widgets =
+          map
+            (w: {
+              type = "weather";
+              inherit (w) title location;
+              units = "imperial";
+              hour-format = "12h";
+            })
+            [
+              {
+                title = "state college";
+                location = "State College, Pennsylvania, United States";
+              }
+              {
+                title = "harrisburg";
+                location = "Harrisburg, Pennsylvania, United States";
+              }
+              {
+                title = "san francisco";
+                location = "San Francisco, California, United States";
+              }
+            ];
+      }
+    ];
+
+    extraWidgets = [
+      {
+        type = "hacker-news";
+        limit = 15;
+        collapse-after = 5;
+      }
+    ];
+
     links = [
 
       {

@@ -49,6 +49,12 @@ in
       description = "Extra Glance widgets for the main column, e.g. from other modules.";
     };
 
+    sideWidgets = lib.mkOption {
+      type = lib.types.listOf (pkgs.formats.yaml { }).type;
+      default = [ ];
+      description = "Widgets for a right-hand column (shown only if non-empty).";
+    };
+
     links = lib.mkOption {
       type = lib.types.listOf (lib.types.attrsOf lib.types.str);
       default = [ ];
@@ -164,7 +170,11 @@ in
                   }
                 ];
               }
-            ];
+            ]
+            ++ lib.optional (cfg.sideWidgets != [ ]) {
+              size = "small";
+              widgets = cfg.sideWidgets;
+            };
           }
         ];
       };

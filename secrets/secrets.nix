@@ -23,6 +23,9 @@ in
   # Nextcloud admin account password (user "admin").
   "nextcloud-admin.age".publicKeys = onTrench;
 
+  # Token for Nextcloud's serverinfo API (dashboard storage widget).
+  "nextcloud-serverinfo.age".publicKeys = onTrench;
+
   # Dawarich admin account password (vps@matmanna.dev).
   "dawarich-admin.age".publicKeys = onTrench;
 
