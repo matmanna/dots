@@ -43,6 +43,12 @@ in
       description = "More monitored links: { title; url; icon; }.";
     };
 
+    extraWidgets = lib.mkOption {
+      type = lib.types.listOf (pkgs.formats.yaml { }).type;
+      default = [ ];
+      description = "Extra Glance widgets for the main column, e.g. from other modules.";
+    };
+
     links = lib.mkOption {
       type = lib.types.listOf (lib.types.attrsOf lib.types.str);
       default = [ ];
@@ -142,6 +148,9 @@ in
                     cache = "1m";
                     inherit sites;
                   }
+                ]
+                ++ cfg.extraWidgets
+                ++ [
                   {
                     type = "releases";
                     title = "upstream releases";

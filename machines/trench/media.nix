@@ -137,4 +137,34 @@
 
   # Background batch jobs yield to interactive services.
   systemd.services.recyclarr.serviceConfig.CPUWeight = 20;
+
+  # Torrent status on the dashboard. qBittorrent's API needs no login from
+  # the host side of the VPN namespace (nixarr whitelists 192.168.15.0/24).
+  selfhost.dashboard.extraWidgets = [
+    {
+      type = "custom-api";
+      title = "torrents";
+      cache = "1m";
+      url = "http://192.168.15.1:8085/api/v2/torrents/info?sort=added_on&reverse=true&limit=8";
+      subrequests.transfer.url = "http://192.168.15.1:8085/api/v2/transfer/info";
+      template = ''
+        {{ $t := .Subrequest "transfer" }}
+        <div class="flex justify-between margin-bottom-10">
+          <span class="size-h5">{{ $t.JSON.String "connection_status" }} · {{ $t.JSON.String "last_external_address_v4" }}</span>
+          <span class="color-highlight">↓ {{ printf "%.1f" (div ($t.JSON.Float "dl_info_speed") 1048576) }} · ↑ {{ printf "%.1f" (div ($t.JSON.Float "up_info_speed") 1048576) }} MB/s</span>
+        </div>
+        <ul class="list list-gap-8">
+        {{ range .JSON.Array "" }}
+          <li>
+            <div class="text-truncate">{{ .String "name" }}</div>
+            <div class="flex justify-between size-h6">
+              <span>{{ .String "state" }}</span>
+              <span class="color-highlight">{{ printf "%.0f" (mul (.Float "progress") 100) }}% · ↓ {{ printf "%.1f" (div (.Float "dlspeed") 1048576) }} MB/s</span>
+            </div>
+          </li>
+        {{ end }}
+        </ul>
+      '';
+    }
+  ];
 }
