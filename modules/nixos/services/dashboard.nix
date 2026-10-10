@@ -84,7 +84,10 @@ in
                         name = config.networking.hostName;
                         # Only the root disk, not every k3s volume mount.
                         hide-mountpoints-by-default = true;
-                        mountpoints."/".name = "disk";
+                        mountpoints."/" = {
+                          name = "disk";
+                          hide = false;
+                        };
                       }
                     ];
                   }
